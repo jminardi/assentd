@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#17191b"/>
+  <g fill="#3ccf86">
+    <!-- check mark: short stroke, then the long stroke is the key's shaft -->
+    <path fill="none" stroke="#3ccf86" stroke-width="56" stroke-linecap="round" stroke-linejoin="round" d="M96 286 L188 378 L330 204"/>
+    <!-- bit / teeth just above the vertex -->
+    <g transform="translate(188 378) rotate(-50.8)">
+      <rect x="40" y="10" width="32" height="52" rx="9"/>
+      <rect x="90" y="10" width="32" height="38" rx="9"/>
+    </g>
+    <!-- bow -->
+    <circle cx="352" cy="176" r="94"/>
+  </g>
+  <circle cx="352" cy="176" r="48" fill="#17191b"/>
+</svg>

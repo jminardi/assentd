@@ -1,0 +1,19 @@
+{
+ "recovery_code_b64u": "Jbcku20wTm4qq15uxi0JGMXIhzZwKegLfV9fCHKe03w",
+ "secrets": {
+  "NAS_SUDO": "nas-sudo-p\u00e4ssword-1",
+  "API_KEY": "sk_live_e25b7b26cd70c7cb"
+ },
+ "passkey": {
+  "priv_pkcs8_b64u": "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg-_FfmVsFe2Z52Oi8B1D0dfcvjfGxH_2aCMqx28mrQHKhRANCAATSiaL8ExzzRJvLiSeLACv9BeGbi0F6_7L_sovG_fxpW8dsgUTZ1g0mxF1d_zF6oYeWJ1-AI7Are-Dn_aWZ1H-L",
+  "cred_id": "5aA4DWgFuPGIjJDwyKxO8w",
+  "prf_seed": "47ft2Ng76WjNTU_hzqpY6Fn3XCFxCJ8OSKrQ3XA79lE"
+ },
+ "inbox_priv_pkcs8_b64u": "MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgKtjmTWzHKazRKaAGettnpH9Ny6kfpvQD61S1ScNwhzWhRANCAARzCaKAh7_2-CP_uXFwZJwN7cdw5wL51rZ0YRBVzxBnNH45c_1G_-bM3U6DU89ihw1Q5falSa8BJBOL8Oona-pL",
+ "phone": {
+  "node": "iphone.example.ts.net",
+  "node_id": "nPHONE1CNTRL",
+  "node_key": "nodekey:aa11",
+  "login": "me@example.com"
+ }
+}

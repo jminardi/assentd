@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "description": "Drives every phone-page flow in headless Chrome against a throwaway vault (node tour.mjs ./shots)",
+  "type": "module",
+  "devDependencies": {
+    "playwright": "1.64.0"
+  }
+}

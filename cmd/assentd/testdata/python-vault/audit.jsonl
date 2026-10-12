@@ -1,0 +1,8 @@
+{"event": "device_allowed", "node": "iphone.example.ts.net", "node_id": "nPHONE1CNTRL", "ts": 1791742079.445, "why": "enrolled the vault"}
+{"aaguid": "00000000000000000000000000000000", "cred": "5aA4DWgFuPGI", "device": "iphone.example.ts.net (me@example.com)", "event": "enrolled", "ts": 1791742079.445}
+{"device": "iphone.example.ts.net (me@example.com)", "event": "secret_added", "name": "NAS_SUDO", "ts": 1791742079.447}
+{"device": "iphone.example.ts.net (me@example.com)", "event": "secret_added", "name": "API_KEY", "ts": 1791742079.448}
+{"device": "iphone.example.ts.net (me@example.com)", "event": "secret_added", "name": "OLD_TYPE", "ts": 1791742079.45}
+{"event": "inbox_enabled", "ts": 1791742079.451}
+{"claimed_source": "piped", "deposit": "nSzQf_9LjTWM", "event": "deposited", "name": "DEPOSITED", "provenance": "handed in by a process on the Mac (not verified)", "replace": false, "session": "claude pid 26544 (ttys002), started Sun Oct 11 01:11:28 2026", "ts": 1791742079.469}
+{"device": "iphone.example.ts.net (me@example.com)", "event": "push_device_added", "ts": 1791742079.471}

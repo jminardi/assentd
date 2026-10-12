@@ -1,0 +1,1 @@
+{"rp_id": "vault.test", "origin": "https://vault.test", "client_uid": 501, "enroll_token": "tok", "http_socket": "/tmp/av-fix-43ft_m42/h.sock", "allowed_logins": ["me@example.com"], "request_timeout": 300, "test_allow_loopback_http": true, "ntfy_server": "https://ntfy.sh", "ntfy_topic": "assentd-0123"}

@@ -1,0 +1,110 @@
+{
+ "creds": [
+  {
+   "aaguid": "00000000000000000000000000000000",
+   "created": 1791742079,
+   "cred_id": "5aA4DWgFuPGIjJDwyKxO8w",
+   "label": "phone",
+   "sign_count": 0,
+   "x": "0omi_BMc80Sby4kniwAr_QXhm4tBev-y_7KLxv38aVs",
+   "y": "x2yBRNnWDSbEXV3_MXqhh5YnX4AjsCt74Of9pZnUf4s"
+  }
+ ],
+ "deposits": {
+  "nSzQf_9LjTWM": {
+   "box": {
+    "ct": "WkbfLR9bgZzOM-y_UUUFY34DOdIWKF54C1H_DA9gi-sN",
+    "eph": "BLYzJ67slawEgSM2ZE8OAdYNas2tkjCO2k3lWqnY4bASxR1v75DkTH6Ze2Kg1cZdiWSWXfpPV_ARGbEPBeWq6yE",
+    "nonce": "mxIeTA-SqRugIktQ"
+   },
+   "claimed_source": "piped",
+   "created": 1791742079.468487,
+   "id": "nSzQf_9LjTWM",
+   "length": 17,
+   "meta_json": "{\"created\":1791742079,\"description\":\"d\",\"hosts\":[],\"max_ttl\":900,\"modes\":[\"command\"],\"name\":\"DEPOSITED\"}",
+   "name": "DEPOSITED",
+   "provenance": "handed in by a process on the Mac (not verified)",
+   "reason": "r",
+   "session": "claude pid 26544 (ttys002), started Sun Oct 11 01:11:28 2026"
+  }
+ },
+ "devices": [
+  {
+   "added": 1791742079,
+   "login": "me@example.com",
+   "node": "iphone.example.ts.net",
+   "node_id": "nPHONE1CNTRL",
+   "node_key": "nodekey:aa11"
+  }
+ ],
+ "inbox": {
+  "created": 1791742079,
+  "priv_box": {
+   "ct": "iNFZ74NzSpz0XIYAAS0SWtaC8bErS7yah4kmKX4_M8JQjLGgY_URaPyi5j3rIEUOakV1d0l7piXA9uFWCe4fgseiOi2oJEbKpvNOD1JvDdExv6E5X8B4O6HEpvpAQlicKBXTXKgS1AfiRKsgRjZ6A5sYVuePnCTbS3eGn_zC_VlHRM4LgxckMLr8LjALF6uLYFYWjqcJIJpl3Q",
+   "nonce": "SA-NxoNtHRlnrFFX"
+  },
+  "pub": "BHMJooCHv_b4I_-5cXBknA3tx3DnAvnWtnRhEFXPEGc0fjlz_Ub_5szdToNTz2KHDVDl9qVJrwEkE4vw6idr6ks"
+ },
+ "push_subs": [
+  {
+   "created": 1791742079,
+   "device": "iphone.example.ts.net (me@example.com)",
+   "endpoint": "http://127.0.0.1:9/push/x",
+   "keys": {
+    "auth": "aaCD-ONQ76oEQ3hriWNlHA",
+    "p256dh": "BOhpP82v914e51zG9O6sq3FRi0PKtug_zOC9UipbnLKZqfNUdP3ZUuREswS2AIammSelhFSgoGULjLtpoJ48zYs"
+   }
+  }
+ ],
+ "recovery_key": {
+  "priv_box": {
+   "ct": "T6M7NalRJ7bCJoWcFWTKl7-87ZNb4y6TU4z2MKaslL6uwFp3ObxfTySm-3svQNNCsQtBDX8jIA0oVgMTloaW7nlt9Y08CI2LpDz8RUN_RaER22aMq4oJBaXzs98SVqVY75d8a3xnWtH9xsMHHVCiOcFoneK2IkbsJmeoyKRzNOZmxdK7uAK1LpQ4d_Wo-Wz5DhNxkathlh7zwQ",
+   "nonce": "JUtSokY7o9JhqhY4"
+  },
+  "pub": "BHr73AfrLt4PNJ78WTErf2qWabXI3juw2vxo3mCBdBgykfiO2Vq1M9hd0z3asLAIOosR9R9CNx0Sl3zlJvBRpr0"
+ },
+ "recovery_wrap": {
+  "ct": "LqMMiZoWb21-6_tJeCxH-CPicDE0yDXWwNRUORkIlLe0osVWhgM-c1nbJMiUbRaq",
+  "nonce": "DRY5atNR0hvIgQRg"
+ },
+ "secrets": {
+  "API_KEY": {
+   "box": {
+    "ct": "EPswrSIRmd7J-TvPT3jiexS93kkJoxPn-tBb7nWlubVmybv1I7dDQw",
+    "nonce": "hTfljmVf3uDjs-RH"
+   },
+   "meta_json": "{\"created\":1791742079,\"description\":\"test API_KEY\",\"hosts\":[\"api.example.com\"],\"http\":{\"header\":\"X-Api-Key: {}\",\"methods\":[\"GET\"],\"paths\":[\"/v1\"]},\"max_ttl\":3600,\"modes\":[\"http\"],\"name\":\"API_KEY\"}",
+   "updated": 1791742079,
+   "version": 1
+  },
+  "NAS_SUDO": {
+   "box": {
+    "ct": "Y6ixNLgmQACWC7RwDIQ0H9lqZ26dgjEDPHoYuIxvihd_rD1J",
+    "nonce": "zQbInkl32iBgpfjO"
+   },
+   "meta_json": "{\"created\":1791742079,\"description\":\"test NAS_SUDO\",\"hosts\":[],\"max_ttl\":900,\"modes\":[\"command\"],\"name\":\"NAS_SUDO\"}",
+   "updated": 1791742079,
+   "version": 1
+  },
+  "OLD_TYPE": {
+   "box": {
+    "ct": "Bba7Wv4UsDvSmMaijMGXfXLc02P2P8uyeHHCUe2l",
+    "nonce": "4JfUbfEn0AB1GI4Y"
+   },
+   "meta_json": "{\"created\":1791742079,\"description\":\"test OLD_TYPE\",\"hosts\":[\"login.example.com\"],\"max_ttl\":3600,\"modes\":[\"type\",\"command\"],\"name\":\"OLD_TYPE\"}",
+   "updated": 1791742079,
+   "version": 1
+  }
+ },
+ "vapid": {
+  "private_pem": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQgvGRHvOWX2m7G6CxI\nd1DQJx9BYOEyP73Qab0fyenxPLihRANCAASbaXYD2/ope8VKzg6DWhiBRC0MabUj\nrrmBf/KEDgcC+gouqoPqM19TioGIyJ0rAzJCn7WVsGYf8LP4e6FemmCM\n-----END PRIVATE KEY-----\n",
+  "public": "BJtpdgPb-il7xUrODoNaGIFELQxptSOuuYF_8oQOBwL6Ci6qg-ozX1OKgYjInSsDMkKftZWwZh_ws_h7oV6aYIw"
+ },
+ "version": 1,
+ "vmk_wraps": {
+  "5aA4DWgFuPGIjJDwyKxO8w": {
+   "ct": "v8uSjofI2I7jT9F7LSiYccPgzs1PM0PwAfIHJIjqc9DhUfgujcphJLa-1jFclqA3",
+   "nonce": "Lr4W3rBd-kaw7Gk-"
+  }
+ }
+}

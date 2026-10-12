@@ -1,0 +1,3 @@
+# For tests/test_e2e.py only (it plays the phone). assentd itself has no Python dependencies.
+cbor2==5.9.0
+cryptography==50.0.2
