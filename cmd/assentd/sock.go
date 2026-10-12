@@ -1,7 +1,9 @@
 package main
 
-// The Unix socket for the assentd CLI. Only the configured client uid may connect, and a request
-// must be written by the process that connected (that process's Claude session gets any grant).
+// The Unix socket for the assentd CLI. Only the configured client uid may connect: that check is
+// the boundary. A request must also be written by the process that connected, so that the grant,
+// the phone and the audit log name the right Claude session. That is bookkeeping, not security:
+// code running as you can run inside any session it likes.
 
 import (
 	"bufio"
@@ -167,6 +169,7 @@ func (s *sockServer) handle(c *net.UnixConn) {
 	c.SetReadDeadline(time.Time{})
 	// The request must come from the process that connected: a connection handed to another
 	// process (or left behind by one that exited) would be attributed to the wrong session.
+	// Accuracy of the session label, not a security check (see the top of this file).
 	if _, p2, v2, err := peerIdentity(c); err != nil || p2 != pid || v2 != pidver {
 		sc.send(map[string]any{"ok": false, "error": "the request must be sent by the process that connected"})
 		return

@@ -35,9 +35,11 @@ box to what it is:
 | `deposits[id].box` | see below | the value | `assentd/deposit/v1\n` + deposit id |
 
 `meta_json` is the secret's policy (name, description, modes, hosts, longest approval, HTTP
-header and limits) as canonical JSON (sorted keys, no whitespace). Because it is in the AAD,
-changing a policy without the VMK makes the secret fail to decrypt, so an edit always re-encrypts
-on the phone.
+header and limits) as canonical JSON (sorted keys, no whitespace). Because it is in the AAD, a
+policy changed in `store.json` (a modified file, or a backup restored from somewhere you don't
+trust) makes the secret fail to decrypt on the phone rather than quietly widening where it may go.
+So an edit always re-encrypts on the phone. It is no defense against a compromised daemon, which
+could serve a page that skips the check.
 
 **Deposits** are ECIES to the inbox key: the daemon makes an ephemeral P-256 key, and
 `key = HKDF-SHA256(ikm = ECDH(ephemeral, inbox), salt = ephemeral public key, info = "assentd/inbox/v1")`.
@@ -80,8 +82,9 @@ raw r||s):
 ```
 
 The daemon accepts the new passkey only with a valid signature from the stored recovery public
-key. So the token alone (root on the Mac, briefly) can't swap in an attacker's passkey: that needs
-the recovery code too.
+key. So a reenroll link that leaks (it is shown on screen, and while it is open any of your
+tailnet devices can load the enrollment page) can't be used to swap in another passkey and lock
+you out: that needs the recovery code too. It doesn't stop root, which can replace the daemon.
 
 ## Web Push
 

@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"crypto/x509"
 	"encoding/json"
-	"os"
 	"os/exec"
 	"strings"
 	"testing"
@@ -98,26 +97,5 @@ func TestFillOrigins(t *testing.T) {
 	if checkFill("PW", &FillTarget{Origin: "https://login.example.com"}, m) != nil ||
 		checkFill("PW", &FillTarget{Origin: "https://evil.example.com"}, m) == nil {
 		t.Error("checkFill")
-	}
-}
-
-// The host check reads the kernel's view of a process, which argv[0] can't change: this test
-// binary is neither the installed host nor started by Chrome.
-func TestChromeHostCheck(t *testing.T) {
-	self, _ := os.Executable()
-	if p, err := pidPath(os.Getpid()); err != nil || !strings.HasSuffix(self, p[strings.LastIndex(p, "/"):]) {
-		t.Fatalf("pidPath(self) = %q, %v; executable %q", p, err, self)
-	}
-	if ppid, err := parentPID(os.Getpid()); err != nil || ppid != os.Getppid() {
-		t.Fatalf("parentPID = %d, %v; want %d", ppid, err, os.Getppid())
-	}
-	if err := checkChromeHost(os.Getpid()); err == nil {
-		t.Fatal("the test binary passed the Chrome host check")
-	}
-	if f, err := csStatus(1); err != nil || f&0x1 == 0 {
-		t.Fatalf("csStatus(launchd) = %#x, %v", f, err)
-	}
-	if err := chromeStartedMe(); err == nil {
-		t.Fatal("go test passed as Google Chrome")
 	}
 }

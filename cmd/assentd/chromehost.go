@@ -2,8 +2,7 @@ package main
 
 // assentd-chrome-host: the native messaging host Chrome starts for the assentd extension. It only
 // relays: native messaging frames (4-byte native-endian length + JSON) on stdin/stdout to and
-// from JSON lines on the daemon's socket. It refuses to run unless Google Chrome started it; the
-// daemon checks that this process is the installed, hardened-runtime binary.
+// from JSON lines on the daemon's socket.
 
 import (
 	"bufio"
@@ -81,13 +80,6 @@ func runChromeHost(args []string) int {
 	if ok, _ := hs["ok"].(bool); !ok {
 		e, _ := hs["error"].(string)
 		return refuse(e)
-	}
-	// Before relaying anything. Only a test daemon (test_mode is in its root-owned config) skips
-	// this; a fake daemon that claims test mode only gets to talk to itself.
-	if tm, _ := hs["test_mode"].(bool); !tm {
-		if err := chromeStartedMe(); err != nil {
-			return refuse(err.Error())
-		}
 	}
 	// daemon -> Chrome
 	go func() {

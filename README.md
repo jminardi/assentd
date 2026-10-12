@@ -156,7 +156,9 @@ extensions, a prompt-injected agent's commands), and mistakes.
   minute reach the phone), but it can still fill your phone with asks, or slow or restart the
   daemon: denial of service by code running as you is not something assentd tries to stop.
 - It can receive what you release in `command` mode.
-- It can't receive what you approve for `fill`: that goes, encrypted, to the paired extension.
+- It doesn't get what you approve for `fill` as output: the value goes, encrypted, to the paired
+  extension, so it stays out of the agent's context and logs. But once it is in the page, code
+  that can drive Chrome can read it back (see below).
 
 **Doesn't protect:**
 - **Released values.** Once a value is given to a command, that command, and anything else
@@ -169,16 +171,14 @@ extensions, a prompt-injected agent's commands), and mistakes.
   password through a `sudo` alias and become root, or edit the checkout after you reviewed it.
   Install from a separate admin account if you can; at least from a clean shell with
   `/usr/bin/sudo`.
-- **Filled passwords, once on the page.** The login page's own scripts can read a filled value, as
-  with any password manager, and so can other extensions with access to that site. The site check
-  relies on the extension being the real one: code running as you can, with effort, read the
-  extension's key from Chrome's profile, or load a look-alike extension in its place, and then
-  receive fills you approve (it can't approve them, and the phone still shows each one). An
-  extension must prove it holds the key it names before it counts as that key. The
-  daemon also only accepts the native messaging host as the installed, root-owned binary started
-  by Google Chrome (checked by its code signature); a user-level host manifest (Chrome reads
-  `~/Library/Application Support/Google/Chrome/NativeMessagingHosts` first) can't get past that,
-  but those checks are defense in depth, not a boundary.
+- **Filled passwords, against code that can drive Chrome.** `fill` keeps a password out of the
+  agent's context by accident, not out of its reach on purpose. A filled value sits in the page,
+  where the page's own scripts, other extensions with access to the site, and an agent that drives
+  Chrome (Claude in Chrome can run JavaScript in the tab) can all read it. Code running as you can
+  also, with effort, read the extension's key from Chrome's profile or put a look-alike extension
+  or native messaging host in its place, and then receive fills you approve. It can't approve
+  them, and the phone still shows each one with its site. An extension counts as a paired key only
+  after proving it holds that key.
 - **Root on the Mac,** and a compromised daemon: it serves the phone page, so it could take the
   vault key on your next Face ID. The crypto protects data at rest; the daemon is the runtime
   trust root.
@@ -208,8 +208,7 @@ recovery code, and don't keep the only copy in the same Apple account as the pas
 - `http` is the default for API keys because it's the only mode where the value never reaches
   a process on the Mac. Secret placement is policy, not request: a requester that could choose
   where the value goes could pick a header a server echoes back, or a URL or body a site stores.
-- The phone page asks the daemon for ciphertext only after a Face ID assertion, and each unlock
-  authorizes one action.
+- Each Face ID unlock authorizes one action, for one request, deposit or secret.
 - `fill` replaced an older mode that typed into Chrome through AppleScript, which needed Chrome's
   "Allow JavaScript from Apple Events": a setting that lets any process running as you script every
   tab. The extension can only fill password fields, the site comes from Chrome rather than the

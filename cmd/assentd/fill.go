@@ -19,36 +19,26 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"log"
 	"net/url"
-	"os"
-	"os/exec"
 	"regexp"
 	"strconv"
 	"strings"
 	"sync"
-	"syscall"
 	"time"
-	"unsafe"
-
-	"golang.org/x/sys/unix"
 )
 
 const (
 	extensionOrigin = "chrome-extension://jcbnicpanjmggphgoonehlalfmjcfmmi/"
-	chromeHostBin   = "/usr/local/libexec/assentd/bin/assentd-chrome-host"
-	// Google's signature on Chrome itself: the only process allowed to have started the host.
-	chromeRequirement = `anchor apple generic and identifier "com.google.Chrome" and certificate leaf[subject.OU] = "EQHXZ8M8AV"`
-	fillInfo          = "assentd/fill/v1"
-	proofInfo         = "assentd/fill-proof/v1"
-	maxHostConns      = 8
-	maxHostMsg        = 64 * 1024
-	maxPairings       = 5
-	maxChromeKeys     = 10
-	pairingLifetime   = 86400
-	tabQueryTimeout   = 5 * time.Second
-	fillDoneTimeout   = 20 * time.Second
+	fillInfo        = "assentd/fill/v1"
+	proofInfo       = "assentd/fill-proof/v1"
+	maxHostConns    = 8
+	maxHostMsg      = 64 * 1024
+	maxPairings     = 5
+	maxChromeKeys   = 10
+	pairingLifetime = 86400
+	tabQueryTimeout = 5 * time.Second
+	fillDoneTimeout = 20 * time.Second
 )
 
 // hostWriteTimeout: how long a message to the Chrome host may take to be read (a var for tests).
@@ -169,86 +159,6 @@ func sealProof(pubRaw []byte, connID string, nonce []byte) (map[string]any, erro
 		return nil, err
 	}
 	return map[string]any{"type": "prove", "id": connID, "eph": eph, "iv": iv, "ct": ct}, nil
-}
-
-// ---- who is on the other end of a host connection
-
-// pidPath is the kernel's path of a process's executable (proc_pidpath), which argv[0] can't fake.
-func pidPath(pid int) (string, error) {
-	buf := make([]byte, 4096)
-	// __proc_info(PROC_INFO_CALL_PIDINFO, pid, PROC_PIDPATHINFO, 0, buf, len)
-	_, _, errno := syscall.Syscall6(336, 2, uintptr(pid), 11, 0, uintptr(unsafe.Pointer(&buf[0])), uintptr(len(buf)))
-	if errno != 0 {
-		return "", errno
-	}
-	if i := strings.IndexByte(string(buf), 0); i >= 0 {
-		buf = buf[:i]
-	}
-	return string(buf), nil
-}
-
-func parentPID(pid int) (int, error) {
-	kp, err := unix.SysctlKinfoProc("kern.proc.pid", pid)
-	if err != nil {
-		return 0, err
-	}
-	return int(kp.Eproc.Ppid), nil
-}
-
-// checkChromeHost: the peer must be the installed, root-owned host binary, running with the
-// hardened runtime the installer signs it with, so code running as you can neither inject into it
-// (DYLD_* variables, task ports) nor put another program at its path. The host itself checks that
-// Google Chrome started it (chromeStartedMe): Chrome runs from a per-user copy of its bundle that
-// only the login user can read, so _assentd can't verify Chrome's signature from here.
-func checkChromeHost(pid int) error {
-	path, err := pidPath(pid)
-	if err != nil || path != chromeHostBin {
-		return fmt.Errorf("not the installed Chrome host (%s)", path)
-	}
-	flags, err := csStatus(pid)
-	if err != nil {
-		return fmt.Errorf("can't read the Chrome host's code signature: %v", err)
-	}
-	const csValid, csRuntime = 0x1, 0x10000
-	if flags&csValid == 0 || flags&csRuntime == 0 {
-		return errors.New("the Chrome host isn't signed with the hardened runtime; run install.sh again")
-	}
-	return nil
-}
-
-// csStatus is the kernel's code-signing status for a process (csops CS_OPS_STATUS).
-func csStatus(pid int) (uint32, error) {
-	var flags uint32
-	_, _, errno := syscall.Syscall6(169, uintptr(pid), 0, uintptr(unsafe.Pointer(&flags)), 4, 0, 0)
-	if errno != 0 {
-		return 0, errno
-	}
-	return flags, nil
-}
-
-// chromeStartedMe: the host's parent is Google Chrome, by its code signature (not its path, which
-// is a per-user copy). Runs in the host, as the login user, who can read that copy.
-func chromeStartedMe() error {
-	ppid := os.Getppid()
-	if ppid <= 1 {
-		return errors.New("the Chrome host has no parent")
-	}
-	cmd := exec.Command("/usr/bin/codesign", "-v", "-R="+chromeRequirement, strconv.Itoa(ppid))
-	done := make(chan error, 1)
-	if err := cmd.Start(); err != nil {
-		return err
-	}
-	go func() { done <- cmd.Wait() }()
-	select {
-	case err := <-done:
-		if err != nil {
-			return errors.New("the Chrome host wasn't started by Google Chrome")
-		}
-	case <-time.After(10 * time.Second):
-		cmd.Process.Kill()
-		return errors.New("checking Chrome's signature timed out")
-	}
-	return nil
 }
 
 // ---- host connections
@@ -383,14 +293,10 @@ func (v *Vault) broadcastPairing() {
 
 // chromeHost serves one connection from assentd-chrome-host, for as long as Chrome keeps it open.
 func (s *sockServer) chromeHost(sc *sockConn, r *bufio.Reader, pid, pidver uint32) {
+	// Who connects isn't checked: anything running as you can reach this socket, and can drive
+	// Chrome too. What counts is the key: a connection gets fills only after proving it holds a key
+	// you paired on the phone.
 	v := s.v
-	if !v.cfg.TestMode {
-		if err := checkChromeHost(int(pid)); err != nil {
-			log.Printf("chrome: refused host pid %d: %v", pid, err)
-			sc.send(map[string]any{"ok": false, "error": err.Error()})
-			return
-		}
-	}
 	h := &hostConn{id: token(6), sc: sc, waiters: map[string]chan map[string]any{}}
 	v.mu.Lock()
 	if len(v.hosts) >= maxHostConns {
@@ -412,7 +318,7 @@ func (s *sockServer) chromeHost(sc *sockConn, r *bufio.Reader, pid, pidver uint3
 		h.waiters = map[string]chan map[string]any{}
 		h.mu.Unlock()
 	}()
-	if h.send(map[string]any{"ok": true, "test_mode": v.cfg.TestMode}) != nil {
+	if h.send(map[string]any{"ok": true}) != nil {
 		return
 	}
 	for {

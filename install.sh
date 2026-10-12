@@ -140,12 +140,8 @@ echo "building assentd $ver (the first build downloads modules, checked against 
   GOCACHE="$BUILD/cache" GOMODCACHE="$BUILD/mod" GOTOOLCHAIN=local GOENV=off GOWORK=off GOFLAGS=-mod=readonly \
   CGO_ENABLED=0 "$GOROOT_DIR/bin/go" build -trimpath -ldflags "-X main.version=${ver// /_}" -o "$STAGE/assentd" ./cmd/assentd)
 rm -rf "$STAGE/src"
-# The native messaging host is the same binary under its own name: the daemon only accepts Chrome
-# connections from a process running exactly this file.
+# The native messaging host is the same binary under its own name (main.go dispatches on it).
 cp "$STAGE/assentd" "$STAGE/bin/assentd-chrome-host"
-# Hardened runtime: dyld ignores DYLD_* variables and same-user code can't get its task port, so
-# its own "Chrome started me" check can be trusted. The daemon refuses a host without it.
-/usr/bin/codesign --force --sign - --options runtime --identifier org.assentd.chrome-host "$STAGE/bin/assentd-chrome-host"
 chown -R root:wheel "$STAGE"; chmod 755 "$STAGE" "$STAGE/assentd" "$STAGE/bin" "$STAGE/bin/assentd-chrome-host" "$STAGE/extension"
 chmod 644 "$STAGE"/extension/*
 rm -rf "$PREFIX.old"
