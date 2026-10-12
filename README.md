@@ -41,7 +41,7 @@ binary; the installer builds it with a checksum-pinned Go.
 ## Install
 
 ```
-git clone … && cd assentd
+git clone https://github.com/jminardi/assentd.git && cd assentd
 env -i /bin/bash --noprofile --norc       # a clean shell; see "Installing" under Threat model
 /usr/bin/sudo ./install.sh
 ```
