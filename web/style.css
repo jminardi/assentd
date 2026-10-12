@@ -164,6 +164,7 @@ button:disabled { opacity: .4; cursor: default; transform: none; }
   background: var(--bg);  /* opaque: requester text must never show through behind the buttons */
   border-top: 1px solid var(--line);
 }
+body.typed .decide { position: static; }  /* see the focusin handler in app.mjs */
 .list-foot { text-align: right; margin: -4px 0 12px; }
 .decide .under { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .decide .note { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }

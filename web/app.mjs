@@ -31,7 +31,13 @@ function h(tag, attrs, ...kids) {
   return el;
 }
 const fill = (el, ...nodes) => { el.replaceChildren(...clean(nodes)); return el; };
-const render = (...nodes) => { fill(app, ...nodes); sizeTextareas(); };
+const render = (...nodes) => { document.body.classList.remove("typed"); fill(app, ...nodes); sizeTextareas(); };
+// iOS Home Screen apps can keep the keyboard's height out of the page after the keyboard closes,
+// leaving the bottom-pinned bar hanging mid-screen. So once you type on a screen, its bar goes back
+// to the end of the page.
+document.addEventListener("focusin", (e) => {
+  if (e.target.matches("textarea, input:not([type=radio]):not([type=checkbox]):not([type=button])")) document.body.classList.add("typed");
+});
 let uid = 0;
 const nextId = (p) => `${p}-${++uid}`;
 
