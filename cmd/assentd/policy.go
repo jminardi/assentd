@@ -56,7 +56,8 @@ const (
 var (
 	modes       = []string{"http", "command", "fill"}
 	httpMethods = map[string]bool{"GET": true, "POST": true, "PUT": true, "PATCH": true, "DELETE": true, "HEAD": true}
-	choices     = map[string]float64{"once": 0, "15m": 900, "1h": 3600}
+	// "max": as long as every secret in the request allows, for a policy shorter than 15 min or between the presets.
+	choices     = map[string]float64{"once": 0, "15m": 900, "1h": 3600, "max": maxTTL}
 	charsets    = map[string]string{
 		"alnum":     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789",
 		"hex":       "0123456789abcdef",

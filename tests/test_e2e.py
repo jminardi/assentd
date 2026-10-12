@@ -1304,7 +1304,8 @@ def main():
         time.sleep(1)
         check("killed CLI cancels its request",
               any(a["event"] == "cancelled" for a in e.get("/api/state")["audit"]), e.get("/api/state")["audit"][:3])
-        rc, out, err, _ = run_with_phone(e, pk, ["run", "--need", "SHORT_TTL", "--reason", "r", "--", "true"], choice="15m")
+        rc, out, err, ph = run_with_phone(e, pk, ["run", "--need", "SHORT_TTL", "--reason", "r", "--", "true"], choice="max")
+        check("'max' choice grants the policy's own limit (600s)", rc == 0 and ph[1]["ttl"] == 600, (rc, err, ph))
         out = e.run("revoke", "--all").stdout
         check("revoke --all", "revoked 1" in out and e.get("/api/state")["grants"] == [], out)
 

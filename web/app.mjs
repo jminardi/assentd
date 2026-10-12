@@ -740,15 +740,17 @@ async function requestView(id) {
     if (!f) return s.max_ttl;
     try { return f.editor.read().max_ttl; } catch { return s.max_ttl; }
   }));
-  const seg = storeOnly || req.mode === "fill" ? null : segmented(nextId("dur"), [["once", "Once"], ["15m", "15 min"], ["1h", "1 hr"]], "once");
-  // Offer only the durations every secret's policy allows; a greyed-out option is just clutter.
+  const seg = storeOnly || req.mode === "fill" ? null : segmented(nextId("dur"), [["once", "Once"], ["15m", "15 min"], ["1h", "1 hr"], ["max", ""]], "once");
+  // Offer only the durations every secret's policy allows; a greyed-out option is just clutter. A
+  // limit that isn't one of the presets (say 5 min) is offered as itself.
   const fitSeg = () => {
     if (!seg) return;
     const cap = capOf();
     for (const input of seg.querySelectorAll("input")) {
-      const over = { once: 0, "15m": 900, "1h": 3600 }[input.value] > cap;
-      input.parentElement.classList.toggle("hidden", over);
-      if (over && input.checked) seg.querySelector("input[value=once]").checked = true;
+      const hide = input.value === "max" ? cap === 900 || cap === 3600 : { once: 0, "15m": 900, "1h": 3600 }[input.value] > cap;
+      if (input.value === "max") input.parentElement.lastChild.textContent = hide ? "" : fmtTtl(cap);
+      input.parentElement.classList.toggle("hidden", hide);
+      if (hide && input.checked) seg.querySelector("input[value=once]").checked = true;
     }
   };
   fitSeg();
